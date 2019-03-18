@@ -83,4 +83,40 @@ An easy way to optimize a React component for performance is to make it a class,
 
 This way, the component will only re-render if it’s state is changed or if it’s props have changed. It will no longer mindlessly re-render every single time its parent re-renders; it will ONLY re-render if one of its props has changed since the last render.
 
+## Optional Chaining
 
+Have you ever had the problem of accessing a nested object property, without knowing if the object or one of the sub-properties even exists? You will probably end up with something like this:
+
+```js
+let data;
+if (
+  myObj &&
+  myObj.firstProp &&
+  myObj.firstProp.secondProp &&
+  myObj.firstProp.secondProp.actualData
+)
+  data = myObj.firstProp.secondProp.actualData;
+```
+
+This is tedious and there’s a better way, at least a proposed way (keep reading how to enable it). It is called optional chaining and works as followed:
+
+```js
+const data = myObj?.firstProp?.secondProp?.actualData;
+```
+
+I think it is an eloquent way of checking nested properties and makes the code way cleaner.
+Currently, optional chaining is not part of the official spec, but is at stage-1 as an experimental feature.
+
+You have to add [@babel/plugin-proposal-optional-chaining](https://babeljs.io/docs/en/babel-plugin-proposal-optional-chaining) in your babelrc to use it.
+
+## Simple Trick
+
+Want boolean equivalent value for any type of value, use `!!`
+
+like `!!a` to convert value of variable ‘a’ to boolean
+
+## Links
+
+https://levelup.gitconnected.com/9-tricks-for-kickass-javascript-developers-in-2019-eb01dd3def2a
+
+[A beginners guide to route level authentication in ReactJS with React Router, HOC's, context & more.](https://www.reddit.com/r/reactjs/comments/atvy6t/a_beginners_guide_to_route_level_authentication/?st=JSIKF8DA&sh=9685e551)
