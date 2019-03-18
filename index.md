@@ -76,3 +76,11 @@ let copy3 = a.concat();
 ```
 
 > And one quick aside about sort (which has bitten me in the past) is that the compareFunction needs to return 0, 1, or -1. Not a boolean! Keep that in mind next time you’re writing a comparator.
+
+## An easy way to optimize a React component
+
+An easy way to optimize a React component for performance is to make it a class, and make it extend `React.PureComponent` instead of `React.Component`.
+
+This way, the component will only re-render if it’s state is changed or if it’s props have changed. It will no longer mindlessly re-render every single time its parent re-renders; it will ONLY re-render if one of its props has changed since the last render.
+
+
