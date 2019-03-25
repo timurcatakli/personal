@@ -41,3 +41,52 @@ function Button({ color, children }) {
 }
 ```
 Memoize Helper Library => [https://www.npmjs.com/package/memoizee](https://www.npmjs.com/package/memoizee)
+
+
+
+## Fully Controlled Component
+
+While there are a few different solutions for when you truly want to derive state from props, usually you should use either a fully controlled component:
+
+```js
+// Option 1: Fully controlled component.
+function TextInput({ value, onChange }) {
+  return (
+    <input
+      value={value}
+      onChange={onChange}
+    />
+  );
+}
+```
+
+## Fully Uncontrolled Component
+
+```js
+// Option 2: Fully uncontrolled component.
+function TextInput() {
+  const [value, setValue] = useState('');
+  return (
+    <input
+      value={value}
+      onChange={e => setValue(e.target.value)}
+    />
+  );
+}
+
+// We can reset its internal state later by changing the key:
+<TextInput key={formId} />
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
