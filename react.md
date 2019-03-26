@@ -13,10 +13,11 @@ class Button extends React.PureComponent {
   render() {
     const textColor = slowlyCalculateTextColor(this.props.color);
     return (
-      <button className={
-        'Button-' + this.props.color +
-        ' Button-text-' + textColor // ✅ Always fresh
-      }>
+      <button
+        className={
+          "Button-" + this.props.color + " Button-text-" + textColor // ✅ Always fresh
+        }
+      >
         {this.props.children}
       </button>
     );
@@ -34,15 +35,14 @@ function Button({ color, children }) {
     [color] // ✅ Don’t recalculate until `color` changes
   );
   return (
-    <button className={'Button-' + color + ' Button-text-' + textColor}>
+    <button className={"Button-" + color + " Button-text-" + textColor}>
       {children}
     </button>
   );
 }
 ```
+
 Memoize Helper Library => [https://www.npmjs.com/package/memoizee](https://www.npmjs.com/package/memoizee)
-
-
 
 ## Fully Controlled Component
 
@@ -51,12 +51,7 @@ While there are a few different solutions for when you truly want to derive stat
 ```js
 // Option 1: Fully controlled component.
 function TextInput({ value, onChange }) {
-  return (
-    <input
-      value={value}
-      onChange={onChange}
-    />
-  );
+  return <input value={value} onChange={onChange} />;
 }
 ```
 
@@ -65,28 +60,15 @@ function TextInput({ value, onChange }) {
 ```js
 // Option 2: Fully uncontrolled component.
 function TextInput() {
-  const [value, setValue] = useState('');
-  return (
-    <input
-      value={value}
-      onChange={e => setValue(e.target.value)}
-    />
-  );
+  const [value, setValue] = useState("");
+  return <input value={value} onChange={e => setValue(e.target.value)} />;
 }
 
 // We can reset its internal state later by changing the key:
-<TextInput key={formId} />
+<TextInput key={formId} />;
 ```
 
+## Performance Links
 
-
-
-
-
-
-
-
-
-
-
-
+- https://github.com/timurcatakli/personal.git
+-
