@@ -71,4 +71,16 @@ function TextInput() {
 ## Performance Links
 
 - https://github.com/timurcatakli/personal.git
--
+- https://ponyfoo.com/articles/javascript-performance-pitfalls-v8
+- https://medium.com/@sdolidze/react-hooks-memoization-99a9a91c8853
+- https://levelup.gitconnected.com/cache-your-react-event-listeners-to-improve-performance-cfbafbf9bb5f
+- https://www.telerik.com/blogs/react-component-performance-comparison?utm_campaign=React%20Ninjas%20Newsletter&utm_medium=email&utm_source=Revue%20newsletter
+- https://houssein.me/progressive-react?utm_campaign=React%2BNewsletter&utm_medium=email&utm_source=React_Newsletter_150
+- https://medium.freecodecamp.org/yeah-hooks-are-good-but-have-you-tried-faster-react-components-e698a8db468c
+- https://www.youtube.com/watch?v=iTrCNz1gRt0
+- https://blog.usejournal.com/what-the-heck-is-repaint-and-reflow-in-the-browser-b2d0fb980c08
+- https://medium.com/crowdbotics/how-to-use-usereducer-in-react-hooks-for-performance-optimization-ecafca9e7bf5
+- https://itnext.io/improving-react-application-perfomance-by-avoiding-unnecessary-updates-bd96d03dec40
+- https://hackernoon.com/react-performance-primer-64fe623c4821
+- https://web.dev/fast/serve-modern-code-to-modern-browsers/codelab-serve-modern-code?utm_campaign=React%20Ninjas%20Newsletter&utm_medium=email&utm_source=Revue%20newsletter
+- https://blog.bitsrc.io/improve-react-performance-using-lazy-loading-and-suspense-933903171954
