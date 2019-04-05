@@ -1,3 +1,5 @@
+## Functional Component
+
 ```js
 import React, { useMemo } from 'react';
 import Select from '@splunk/react-ui/Select';
@@ -45,3 +47,4 @@ SavedViews.defaultProps = {
 
 export default SavedViews;
 ```
+## Spec
