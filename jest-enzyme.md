@@ -46,5 +46,46 @@ SavedViews.defaultProps = {
 };
 
 export default SavedViews;
+
 ```
 ## Spec
+
+```js
+import React from 'react';
+import { shallow, mount } from 'enzyme';
+import Select from '@splunk/react-ui/Select';
+import SavedViews, { generateOptions } from '.';
+
+const props = {
+  onChange: jest.fn(),
+};
+const view = <SavedViews {...props} />;
+let wrapper;
+
+describe('SavedViews', () => {
+  beforeEach(() => {
+    wrapper = shallow(view);
+  });
+
+  describe('Render', () => {
+    it('should render with no errors', () => {
+      expect(wrapper.exists()).toBe(true);
+      expect(wrapper).toMatchSnapshot();
+    });
+  });
+
+  describe('Select Options', () => {
+    it('should render options', () => {
+      const options = [{ label: 'foo', id: 'bar' }];
+      expect(generateOptions(options)).toEqual([<Select.Option label="foo" value="bar" key="bar" />]);
+    });
+
+    it('should call callback function when a filter is selected', () => {
+      wrapper = mount(view);
+      const submitButton = wrapper.find(Select).first();
+      submitButton.instance().props.onChange({}, { value: 'foo' });
+      expect(props.onChange).toBeCalledWith('foo');
+    });
+  });
+});
+```
