@@ -1,3 +1,24 @@
+# Render Prop Patterns
+
+```js
+// example 1
+<Container render={prop => (
+ <Presentation {...props} />
+)} />
+
+// example 2
+<Container children={prop => (
+ <Presentation {...props} />
+)} />
+
+// example 3
+<Container>
+ {props => (
+    <Presentation {...props} />
+  )}
+</Container>
+```
+
 # Memoization
 
 In below component, we want memoization. We have some inputs, and we don’t want to recalculate the output unless the inputs change.
@@ -106,7 +127,7 @@ class App extends Component {
     const color = this.state.expanded ? "red" : "green";
     return (
       <div className="App">
-        {/* 
+        {/*
         Clicking on the button updates App's state which cause DumbComponent to rerender.
       */}
         <button onClick={this.handleStateUpdate}>Update State</button>
@@ -508,6 +529,150 @@ const TodoScreen = ({ todos, toggleTodo }) => (
 https://reactjs.org/blog/2018/09/10/introducing-the-react-profiler.html
 
 [![React Profiler](https://img.youtube.com/vi/yXJOkfYXCJQ/0.jpg)](https://www.youtube.com/watch?v=yXJOkfYXCJQ "Everything Is AWESOME")
+
+# Delete EventListeners on unMount
+
+Lets say you have a component where you listen to page activities.
+
+```js
+import React, { useState, useRef, useEffect } from "react";
+import createActivityDetector from "activity-detector";
+
+const useIdle = options => {
+  const [isIdle, setIdle] = useState(false);
+  useEffect(() => {
+    const activityDetector = createActivityDetector(options);
+    activityDetector.on("idle", () => setIdle(true));
+    activityDetector.on("active", () => setIdle(false));
+  }, []);
+  return isIdle;
+};
+
+const App = () => {
+  const isIdle = useIdle({ timeToIdle: 1000 });
+  return <div>{isIdle ? "Are you still there" : "Hello there"}</div>;
+};
+
+export default App;
+```
+
+When this component unmounts you need to remove the event listeners `activity-detector` created.
+
+So you update the `useEffect`
+
+```js
+useEffect(() => {
+  const activityDetector = createActivityDetector(options);
+  activityDetector.on("idle", () => setIdle(true));
+  activityDetector.on("active", () => setIdle(false));
+  return () => activityDetector.stop();
+}, []);
+```
+
+A nice trick is to check if there are any eventlisteners left undeleted. In Chrome DevTools console you can write `getEventListeners(document);` and get a list of all the undeleted listeners.
+
+# Avoid inline objects wherever you can
+
+Each time you inline an object, React re-creates a new reference to this object on every render. This causes components that receive this object to treat it as a referentially different one. Thus, a shallow equality on the props of this component will return false on every render cycle.
+
+This is an indirect reference to the inline styles that a lot of people use. Inlining styles prop on a component will force your component to always render (unless you write a custom shouldComponentUpdate method) which could potentially lead to performance issues, depending on whether the component holds a lot of other subcomponents below it or not.
+
+There is a nice trick to use if this prop has to have a different reference — because, for example, it’s being created inside a .map — , which is to spread its contents as props using the ES6 spread operator. Whenever the contents of an object are primitives (i.e. not functions, objects or Arrays) or non-primitives with “fixed” references, you can pass them as props instead of passing the object that contains them as a single prop. Doing that will allow your components to benefit from rendering bail-out techniques by referentially comparing their next and previous props.
+
+```js
+// Don't do this!
+function Component(props) {
+  const aProp = { someProp: "someValue" };
+  return <AnotherComponent style={{ margin: 0 }} aProp={aProp} />;
+}
+
+// Do this instead :)
+const styles = { margin: 0 };
+function Component(props) {
+  const aProp = { someProp: "someValue" };
+  return <AnotherComponent style={styles} {...aProp} />;
+}
+```
+
+Try and bind function props to method or utilise useCallback as much as you can to benefit from rendering bail-out techniques. This applies to functions returned from render-props as well.
+
+```js
+// Don't do this!
+function Component(props) {
+  return <AnotherComponent onChange={() => props.callback(props.id)} />;
+}
+
+// Do this instead :)
+function Component(props) {
+  const handleChange = useCallback(() => props.callback(props.id), [props.id]);
+  return <AnotherComponent onChange={handleChange} />;
+}
+
+// Or this for class-based components :)
+class Component extends React.Component {
+  handleChange = () => {
+    this.props.callback(this.props.id);
+  };
+
+  render() {
+    return <AnotherComponent onChange={this.handleChange} />;
+  }
+}
+```
+
+# Tweak CSS instead of forcing a component to mount & unmount
+
+Rendering is costly, especially when the DOM needs to be altered. Whenever you have some sort of accordion or tab functionality — where you only see one item at a time — , you might be tempted to unmount the component that’s not visible and mount it back when it becomes visible.
+
+If the component that gets mounted/unmounted is “heavy”, then this operation might be way more costly than needed and result into lagginess. In cases like these, you would be better off hiding it through CSS, while keeping the content to the DOM. I do realise that sometimes this is not possible since you might have a case where having those components simultaneously mounted might cause issues (i.e. components competing with endless pagination on the window), but you should opt to do it when that’s not the case.
+
+As a bonus, tweaking the opacity to 0 has almost zero cost for the Browser (since it doesn’t cause a reflow) and should be preferred over visibility & display changes whenever possible.
+
+TLDR; Instead of hiding through unmounting, sometimes it can be beneficial to hide through CSS while keeping your component mounted. This is a big gain for heavy components with significant mount/unmount timings.
+
+```js
+// Avoid this is the components are too "heavy" to mount/unmount
+function Component(props) {
+  const [view, setView] = useState('view1');
+  return view === 'view1' ? <SomeComponent /> : <AnotherComponent />
+}
+
+// Do this instead if you' re opting for speed & performance gains
+const visibleStyles = { opacity: 1 };
+const hiddenStyles = { opacity: 0 };
+function Component(props) {
+  const [view, setView] = useState('view1');
+  return (
+    <React.Fragment>
+      <SomeComponent style={view === 'view1' ? visibleStyles : hiddenStyles}>
+      <AnotherComponent style={view !== 'view1' ? visibleStyles : hiddenStyles}>
+    </React.Fragment>
+  )
+}
+```
+
+# Is it worth using hooks like useMemo for constant values?
+
+`const one = useMemo( () => 1, [] )`
+
+@dan_abramov
+For primitives, no — just adds extra cost. For objects, maybe.
+
+---
+
+---
+
+---
+
+---
+
+---
+
+---
+
+---
+
+---
 
 ---
 
