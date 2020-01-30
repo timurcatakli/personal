@@ -1,0 +1,16 @@
+import React from 'react';
+import { shallow } from 'enzyme';
+import NotableIDCell from './index';
+
+const props = {
+  cell: {
+    value: '123456789',
+  },
+};
+
+describe('NotableIDCell', () => {
+  test('FilterChips methods', () => {
+    const wrapper = shallow(<NotableIDCell {...props} />);
+    expect(wrapper).toMatchSnapshot(`ShallowWrapper {}`);
+  });
+});
