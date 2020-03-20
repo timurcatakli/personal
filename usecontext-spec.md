@@ -1,4 +1,5 @@
 ```js
+// in order to mock context you need to export it as a custom hook e.g. useResponseContext
 import React from 'react';
 import { shallow } from 'enzyme';
 import 'jest-styled-components';
