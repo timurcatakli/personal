@@ -1,3 +1,4 @@
+```js
 import React from 'react';
 import { shallow } from 'enzyme';
 import 'jest-styled-components';
@@ -48,3 +49,4 @@ it('renders component', () => {
   expect(wrapper.exists()).toBe(true);
   expect(wrapper).toMatchSnapshot();
 });
+```
