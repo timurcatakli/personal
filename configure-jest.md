@@ -27,6 +27,7 @@ module.exports = {
 ## /scripts/test.js
 
 COMMENT OUT argv.push('--no-coverage')
+ADD COVERAGE
 
 ```js
 ...
@@ -34,6 +35,7 @@ COMMENT OUT argv.push('--no-coverage')
     // console.log output will be printed
     argv.push('--verbose=false');
     // argv.push('--no-coverage');
+    argv.push('--coverage');
   }
   jest.run(argv);
 }
