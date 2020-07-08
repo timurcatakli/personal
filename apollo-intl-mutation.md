@@ -1,3 +1,11 @@
+# ADD BELOW MOCK IF YOU GET "RANDOM VALUES ERROR"
+
+```js
+jest.mock('@src/shared/services', () => ({
+  getAccessToken: jest.fn(() => 'token'),
+}));
+```
+
 ## CODE
 
 ```js
